@@ -5,13 +5,16 @@
   You can read a specification of the NBT format [here](http://wiki.vg/NBT).
 
 ***(Warning: This is still a WIP, and there's some things to correct:***
+
  ***- Parsing of Tag_List(Compound) isn't supported yet.***
- ***- The string parser fails if there's a unescaped backslash on the string.***
-***If you can help with any of these things, please submit a Pull Request.)***
+ 
+ ***If you can help with any of these things, please submit a Pull Request.)***
 
 ## Usage ##
 *(You can see an example of usage in Main.hx)*
+
 **Writing**
+
 Init a new instance of the writer.
 
     var nbt:NbtWriter = new NbtWriter();
@@ -55,8 +58,10 @@ Or just get the data
 
     nbt.getOutput(); //Raw data
     nbt.getCompressedOutput(); //Compressed with GZIP.
+	
 
 **Parsing**
+
 First get the NBT data:
 
     var fin:FileInput = File.read("test.nbt",true);
@@ -68,5 +73,7 @@ And that's it! If you write an output name, the result will be exported as a Jso
 
 ## Dependencies ##
 [OpenFL](lib.haxe.org/p/openfl/4.1.0/) (3,5,2 or higher, used for GZIP compression)
+
 [Lime](lib.haxe.org/p/lime/3.1.0/) (2,8,1 or higher, as above)
+
 [Thx.Core](lib.haxe.org/p/thx.core/versions) (0,40,1 or higher, used for writing and parsing of Int64s until the latest version of Haxe gets out of development)
