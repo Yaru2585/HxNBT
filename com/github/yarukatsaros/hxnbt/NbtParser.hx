@@ -15,7 +15,6 @@ import sys.io.FileOutput;
 class NbtParser
 {
 
-	public var typesArray:Array<String>;
 	var _file:BytesInput;
 	var _object:String;
 	var _outputName:String;
