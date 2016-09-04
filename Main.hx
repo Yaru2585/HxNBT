@@ -18,7 +18,7 @@ class Main
 		var nbt:NbtWriter = new NbtWriter();
 		nbt.writeCompound("root");
 		
-		nbt.writeString("test", "Hello world");		
+		nbt.writeString("test", "Hello world \\s38f");		
 		nbt.writeByte("byte test", 10);
 		nbt.writeByteArray("array test", Bytes.ofString("AAAAA"));
 		nbt.writeFloat("float test", 12.5);
