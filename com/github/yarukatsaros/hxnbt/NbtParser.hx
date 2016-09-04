@@ -212,15 +212,13 @@ class NbtParser
 	
 	private function parseString():Void
 	{
-		//FIXME: Parse correctly backslashes (\) without trying to escape.
 		if (_object.charAt(_object.length - 1) != ":" && _object.charAt(_object.length - 1) != "{") {
 			_object += ",";			
 		}
 		var nameLength = _file.readInt16();
 		var tagName:String = _file.readString(nameLength);
 		var stringLength = _file.readInt16();
-		var string:String = _file.readString(stringLength);
-		var s = Std.string(string);
+		var string:String = StringTools.replace(_file.readString(stringLength), '\\', '\\\\'); //I THINK this solves the problem with slashes on strings. Please do.
 		_object += '"$tagName":"$string"';
 		if (_file.position < _file.length) {
 			readFile(_file.readByte());
