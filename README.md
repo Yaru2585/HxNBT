@@ -62,12 +62,22 @@ Or just get the data
 
 **Parsing**
 
-First get the NBT data:
+First get the NBT data, from a file...
 
     var fin:FileInput = File.read("test.nbt",true);
+
+Or directly from a Writer:
+
+    var bytes = nbt.getOutput().getBytes()
+
+    
+
 Then give it to the parser...
 
-    var parser:NbtParser = new NbtParser(fin,true,"test.json",false); //In order: FileInput, BigEndian, OutputName, Compressed.
+    var parser:NbtParser = new NbtParser()
+    parser.parseNBTFile(fin,true,"test.json",false) //In order: FileInput, BigEndian, OutputName, Compressed
+    OR
+    parser.parseNBTData(bytes,true,"test2.json",false)
 
 And that's it! If you write an output name, the result will be exported as a Json file. If you don't, you can get the data with `getObjectAsString()` or `getObjectAsJson()`
 
