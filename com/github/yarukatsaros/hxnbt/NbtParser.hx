@@ -1,6 +1,8 @@
 package com.github.yarukatsaros.hxnbt;
 import haxe.Int64;
+import haxe.io.Bytes;
 import haxe.io.BytesInput;
+import haxe.io.BytesOutput;
 import haxe.Json;
 import openfl.utils.ByteArray;
 import openfl.utils.CompressionAlgorithm;
@@ -21,6 +23,11 @@ class NbtParser
 	
 	var _openCompounds:Int = 1;
 	
+	public function new():Void 
+	{
+		
+	}	
+	
 	/**
 	 * Parses a NBT file into a Json String, with options to turn it into a dynamic object or write it in a file.
 	 * @param	fileInput The data of the file to parse.
@@ -28,7 +35,7 @@ class NbtParser
 	 * @param	outputName If not empty, the parser will write the output, as Json, into this file once finished.
 	 * @param	isCompressed If true, the parser will try to uncompress the file using GZIP before parsing.
 	 */
-	public function new(fileInput:FileInput,bigEndian:Bool,outputName:String,isCompressed:Bool = false) 
+	public function parseNBTFile(fileInput:FileInput, bigEndian:Bool, outputName:String, isCompressed:Bool = false)
 	{
 		if (isCompressed) {
 			try 
@@ -50,7 +57,38 @@ class NbtParser
 		_file.bigEndian = bigEndian;
 		_outputName = outputName;
 		_object = "{";
-		readFile(_file.readByte());
+		readFile(_file.readByte());		
+	}
+	
+	/**
+	 * Parses the Bytes output of a NbtWriter into a Json String, with options to turn it into a dynamic object or write it in a file.
+	 * @param	bytes NbtWriter.getOutput() or .getCompressedOutput()
+	 * @param	bigEndian This should be true in almost every case.
+	 * @param	outputName If not empty, the parser will write the output, as Json, into this file once finished.
+	 * @param	isCompressed If true, the parser will try to uncompress the file using GZIP before parsing.
+	 */
+	public function parseNBTData(bytes:Bytes, bigEndian:Bool, outputName:String, isCompressed:Bool = false)
+	{
+		if (isCompressed) {
+			try 
+			 {
+				 var ba:ByteArray = new ByteArray();
+				 ba.writeBytes(bytes);
+				 ba.uncompress(CompressionAlgorithm.GZIP);
+				 _file = new BytesInput(ba);
+			 } 
+			 catch (e:Dynamic) 
+			 {
+				 throw("Something went wrong uncompressing the file! Are you sure it's compressed?\n" + e);
+			 }
+		}
+		else {
+			_file = new BytesInput(bytes);
+		}
+		_file.bigEndian = bigEndian;
+		_outputName = outputName;
+		_object = "{";
+		readFile(_file.readByte());				
 	}
 	
 	private function readFile(byte:Int) 
@@ -363,7 +401,7 @@ class NbtParser
 	function exportFileAsJson():Void 
 	{
 		var fout:FileOutput = File.write(_outputName, false);
-		fout.writeString(_object);
+		fout.writeString(Json.stringify(getObjectAsJson()));
 		fout.close();
 	}
 	

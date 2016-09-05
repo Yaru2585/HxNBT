@@ -371,15 +371,19 @@ class NbtWriter
 	}
 	
 	/**
-	 * Returns the writer object (as a ByteArray) after compressing it with GZIP.
+	 * Returns the writer object (as a ByteArray) after compressing it with GZIP. WARNING: Do not use this instance after calling this method.
 	 * @return A ByteArray with the written data, compressed with GZIP.
 	 */
-	public function getCompressedOutput():ByteArray
+	public function getCompressedOutput():BytesOutput
 	{
 		var ba:ByteArray = new ByteArray();
 		ba.writeBytes(_bytes.getBytes());
 		ba.compress(CompressionAlgorithm.GZIP);
-		return ba;
+		var bo:BytesOutput = new BytesOutput();
+		bo.write(ba);
+		_bytes.close();
+		ba.clear();
+		return bo;
 	}
 	
 	private function writeListHeader(type:Int,name:String,list:Array<Dynamic>)
